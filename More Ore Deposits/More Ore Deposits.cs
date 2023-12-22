@@ -155,13 +155,11 @@ namespace MoreOreDeposits
             ConfigureDropOnDestroyed(silverDepositPrefab, "SilverOre", 1, 2);
             ConfigureDropOnDestroyed(blackmetalDepositPrefab, "BlackMetalScrap", 1, 2);
 
-            ConfigureHoverText(goldDepositPrefab, "$Gold ore");
-            ConfigureHoverText(ironDepositPrefab, "$Iron ore");
-            ConfigureHoverText(silverDepositPrefab, "$Silver ore");
-            ConfigureHoverText(blackmetalDepositPrefab, "$Blackmetal ore");
+            ConfigureHoverText(goldDepositPrefab, "$Gold");
+            ConfigureHoverText(ironDepositPrefab, "$Iron");
+            ConfigureHoverText(silverDepositPrefab, "$Silver");
+            ConfigureHoverText(blackmetalDepositPrefab, "$Blackmetal");
 
-
-            // Assuming oakStumpPrefab is loaded and oakStumpConfig is correctly set up
             CustomVegetation goldDepositVegetation = new CustomVegetation(goldDepositPrefab, false, goldDepositConfig);
             CustomVegetation ironDepositVegetation = new CustomVegetation(ironDepositPrefab, false, ironDepositConfig);
             CustomVegetation silverDepositVegetation = new CustomVegetation(silverDepositPrefab, false, silverDepositConfig);
