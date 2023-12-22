@@ -59,16 +59,16 @@ namespace MoreOreDeposits
         private void LoadAssets()
         {
             goldAssetBundle = AssetUtils.LoadAssetBundleFromResources("gold_bundle");
-            goldDepositPrefab = goldAssetBundle?.LoadAsset<GameObject>("gold_deposit_prefab");
+            goldDepositPrefab = goldAssetBundle?.LoadAsset<GameObject>("MineRock_gold");
 
             ironAssetBundle = AssetUtils.LoadAssetBundleFromResources("iron_bundle");
-            ironDepositPrefab = ironAssetBundle?.LoadAsset<GameObject>("iron_deposit_prefab");
+            ironDepositPrefab = ironAssetBundle?.LoadAsset<GameObject>("MineRock_iron");
 
             silverAssetBundle = AssetUtils.LoadAssetBundleFromResources("silver_bundle");
-            silverDepositPrefab = silverAssetBundle?.LoadAsset<GameObject>("silver_deposit_prefab");
+            silverDepositPrefab = silverAssetBundle?.LoadAsset<GameObject>("MineRock_silver_small");
 
             blackmetalAssetBundle = AssetUtils.LoadAssetBundleFromResources("blackmetal_bundle");
-            blackmetalDepositPrefab = blackmetalAssetBundle?.LoadAsset<GameObject>("blackmetal_deposit_prefab");
+            blackmetalDepositPrefab = blackmetalAssetBundle?.LoadAsset<GameObject>("MineRock_blackmetal");
 
             LogResourceNamesAndCheckErrors();
         }
@@ -155,10 +155,10 @@ namespace MoreOreDeposits
             ConfigureDropOnDestroyed(silverDepositPrefab, "SilverOre", 1, 2);
             ConfigureDropOnDestroyed(blackmetalDepositPrefab, "BlackMetalScrap", 1, 2);
 
-            ConfigureHoverText(goldDepositPrefab, "$piece_deposit_gold");
-            ConfigureHoverText(ironDepositPrefab, "$piece_deposit_iron");
-            ConfigureHoverText(silverDepositPrefab, "$piece_deposit_small_silver");
-            ConfigureHoverText(blackmetalDepositPrefab, "$piece_deposit_blackmetal");
+            ConfigureHoverText(goldDepositPrefab, "$Gold ore");
+            ConfigureHoverText(ironDepositPrefab, "$Iron ore");
+            ConfigureHoverText(silverDepositPrefab, "$Silver ore");
+            ConfigureHoverText(blackmetalDepositPrefab, "$Blackmetal ore");
 
 
             // Assuming oakStumpPrefab is loaded and oakStumpConfig is correctly set up
