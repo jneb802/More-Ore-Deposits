@@ -16,7 +16,7 @@ namespace MoreOreDeposits
     internal class moreOreDeposits : BaseUnityPlugin
     {
         public const string PluginGUID = "com.bepinex.MoreOreDeposits";
-        public const string PluginName = "More Ore Depositss";
+        public const string PluginName = "More Ore Deposits";
         public const string PluginVersion = "0.0.1";
 
         // Use this class to add your own localization to the game
@@ -59,16 +59,16 @@ namespace MoreOreDeposits
         private void LoadAssets()
         {
             goldAssetBundle = AssetUtils.LoadAssetBundleFromResources("gold_bundle");
-            goldDepositPrefab = goldAssetBundle?.LoadAsset<GameObject>("gold_prefab");
+            goldDepositPrefab = goldAssetBundle?.LoadAsset<GameObject>("gold_deposit_prefab");
 
             ironAssetBundle = AssetUtils.LoadAssetBundleFromResources("iron_bundle");
-            ironDepositPrefab = ironAssetBundle?.LoadAsset<GameObject>("iron_prefab");
+            ironDepositPrefab = ironAssetBundle?.LoadAsset<GameObject>("iron_deposit_prefab");
 
             silverAssetBundle = AssetUtils.LoadAssetBundleFromResources("silver_bundle");
-            silverDepositPrefab = silverAssetBundle?.LoadAsset<GameObject>("silver_prefab");
+            silverDepositPrefab = silverAssetBundle?.LoadAsset<GameObject>("silver_deposit_prefab");
 
             blackmetalAssetBundle = AssetUtils.LoadAssetBundleFromResources("blackmetal_bundle");
-            blackmetalDepositPrefab = blackmetalAssetBundle?.LoadAsset<GameObject>("blackmetal_prefab");
+            blackmetalDepositPrefab = blackmetalAssetBundle?.LoadAsset<GameObject>("blackmetal_deposit_prefab");
 
             LogResourceNamesAndCheckErrors();
         }
@@ -99,14 +99,7 @@ namespace MoreOreDeposits
             BlockCheck = true,
             Min = 0,
             Max = 2,
-            InForest = true,
-            ForestThresholdMin = 0,
-            ForestThresholdMax = 2,
-            MaxTilt = 20,
-            MaxTerrainDelta = 3,
-            TerrainDeltaRadius = 6,
-            GroupSizeMax = 1,
-            GroundOffset = -0.4f,
+            GroundOffset = -0.3f,
 
         };
 
@@ -117,14 +110,7 @@ namespace MoreOreDeposits
             BlockCheck = true,
             Min = 0,
             Max = 2,
-            InForest = true,
-            ForestThresholdMin = 0,
-            ForestThresholdMax = 2,
-            MaxTilt = 20,
-            MaxTerrainDelta = 3,
-            TerrainDeltaRadius = 6,
-            GroupSizeMax = 1,
-            GroundOffset = -0.4f,
+            GroundOffset = -0.3f,
 
         };
 
@@ -135,14 +121,7 @@ namespace MoreOreDeposits
             BlockCheck = true,
             Min = 0,
             Max = 2,
-            InForest = true,
-            ForestThresholdMin = 0,
-            ForestThresholdMax = 2,
-            MaxTilt = 20,
-            MaxTerrainDelta = 3,
-            TerrainDeltaRadius = 6,
-            GroupSizeMax = 1,
-            GroundOffset = -0.4f,
+            GroundOffset = -0.3f,
 
         };
 
@@ -153,14 +132,7 @@ namespace MoreOreDeposits
             BlockCheck = true,
             Min = 0,
             Max = 2,
-            InForest = true,
-            ForestThresholdMin = 0,
-            ForestThresholdMax = 2,
-            MaxTilt = 20,
-            MaxTerrainDelta = 3,
-            TerrainDeltaRadius = 6,
-            GroupSizeMax = 1,
-            GroundOffset = -0.4f,
+            GroundOffset = -0.3f,
 
         };
 
@@ -182,6 +154,12 @@ namespace MoreOreDeposits
             ConfigureDropOnDestroyed(ironDepositPrefab, "IronOre", 1, 2);
             ConfigureDropOnDestroyed(silverDepositPrefab, "SilverOre", 1, 2);
             ConfigureDropOnDestroyed(blackmetalDepositPrefab, "BlackMetalScrap", 1, 2);
+
+            //ConfigureHoverText(goldDepositPrefab, "$piece_deposit_gold");
+            //ConfigureHoverText(ironDepositPrefab, "$piece_deposit_iron");
+            //ConfigureHoverText(silverDepositPrefab, "$piece_deposit_small_silver");
+            //ConfigureHoverText(blackmetalDepositPrefab, "$piece_deposit_blackmetal");
+
 
             // Assuming oakStumpPrefab is loaded and oakStumpConfig is correctly set up
             CustomVegetation goldDepositVegetation = new CustomVegetation(goldDepositPrefab, false, goldDepositConfig);
@@ -233,6 +211,25 @@ namespace MoreOreDeposits
                     m_weight = 1f
                 },
             };
+        }
+
+        private void ConfigureHoverText(GameObject prefab, string hoverText)
+        {
+            if (prefab == null)
+            {
+                Jotunn.Logger.LogError("Prefab is null. Cannot add HoverText.");
+                return;
+            }
+
+            // Check if HoverText component already exists, if not, add it
+            HoverText hoverTextComponent = prefab.GetComponent<HoverText>();
+            if (hoverTextComponent == null)
+            {
+                hoverTextComponent = prefab.AddComponent<HoverText>();
+            }
+
+            // Set the hover text
+            hoverTextComponent.m_text = hoverText;
         }
 
     }
