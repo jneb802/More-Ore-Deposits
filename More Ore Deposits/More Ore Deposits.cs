@@ -13,7 +13,7 @@ namespace MoreOreDeposits
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
     [BepInDependency(Jotunn.Main.ModGuid)]
     //[NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.Minor)]
-    internal class moreOreDeposits : BaseUnityPlugin
+    internal class MoreOreDeposits : BaseUnityPlugin
     {
         public const string PluginGUID = "com.bepinex.MoreOreDeposits";
         public const string PluginName = "More Ore Deposits";
@@ -145,20 +145,20 @@ namespace MoreOreDeposits
                 return;
             }
 
-            ConfigureDestructible(goldDepositPrefab, 1, 30f);
+            ConfigureDestructible(goldDepositPrefab, 0, 30f);
             ConfigureDestructible(ironDepositPrefab, 1, 30f);
             ConfigureDestructible(silverDepositPrefab, 2, 30f);
-            ConfigureDestructible(blackmetalDepositPrefab, 3, 30f);
+            ConfigureDestructible(blackmetalDepositPrefab, 2, 30f);
 
             ConfigureDropOnDestroyed(goldDepositPrefab, "Coins", 10, 25);
             ConfigureDropOnDestroyed(ironDepositPrefab, "IronOre", 1, 2);
             ConfigureDropOnDestroyed(silverDepositPrefab, "SilverOre", 1, 2);
             ConfigureDropOnDestroyed(blackmetalDepositPrefab, "BlackMetalScrap", 1, 2);
 
-            //ConfigureHoverText(goldDepositPrefab, "$piece_deposit_gold");
-            //ConfigureHoverText(ironDepositPrefab, "$piece_deposit_iron");
-            //ConfigureHoverText(silverDepositPrefab, "$piece_deposit_small_silver");
-            //ConfigureHoverText(blackmetalDepositPrefab, "$piece_deposit_blackmetal");
+            ConfigureHoverText(goldDepositPrefab, "$piece_deposit_gold");
+            ConfigureHoverText(ironDepositPrefab, "$piece_deposit_iron");
+            ConfigureHoverText(silverDepositPrefab, "$piece_deposit_small_silver");
+            ConfigureHoverText(blackmetalDepositPrefab, "$piece_deposit_blackmetal");
 
 
             // Assuming oakStumpPrefab is loaded and oakStumpConfig is correctly set up
