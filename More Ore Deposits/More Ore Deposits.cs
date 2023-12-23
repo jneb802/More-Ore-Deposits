@@ -94,12 +94,14 @@ namespace MoreOreDeposits
 
         // Define the vegetation configuration
         VegetationConfig goldDepositConfig = new VegetationConfig
-        {
-            Biome = Heightmap.Biome.Swamp | Heightmap.Biome.BlackForest | Heightmap.Biome.Mistlands,
+         {
+            Biome = ZoneManager.AnyBiomeOf(Heightmap.Biome.Swamp | Heightmap.Biome.BlackForest | Heightmap.Biome.Mistlands),
             BlockCheck = true,
-            Min = 0,
-            Max = 2,
+            Min = 10,
+            Max = 20,
             GroundOffset = -0.3f,
+            ScaleMin = 295,
+            ScaleMax = 296,
 
         };
 
@@ -108,9 +110,11 @@ namespace MoreOreDeposits
         {
             Biome = Heightmap.Biome.Swamp,
             BlockCheck = true,
-            Min = 0,
-            Max = 2,
+            Min = 10,
+            Max = 20,
             GroundOffset = -0.3f,
+            ScaleMin = 295,
+            ScaleMax = 296,
 
         };
 
@@ -119,9 +123,11 @@ namespace MoreOreDeposits
         {
             Biome = Heightmap.Biome.Mountain,
             BlockCheck = true,
-            Min = 0,
-            Max = 2,
+            Min = 10,
+            Max = 20,
             GroundOffset = -0.3f,
+            ScaleMin = 295,
+            ScaleMax = 296,
 
         };
 
@@ -130,9 +136,11 @@ namespace MoreOreDeposits
         {
             Biome = Heightmap.Biome.Plains,
             BlockCheck = true,
-            Min = 0,
-            Max = 2,
+            Min = 10,
+            Max = 20,
             GroundOffset = -0.3f,
+            ScaleMin = 295,
+            ScaleMax = 296,
 
         };
 
@@ -151,9 +159,9 @@ namespace MoreOreDeposits
             ConfigureDestructible(blackmetalDepositPrefab, 2, 30f);
 
             ConfigureDropOnDestroyed(goldDepositPrefab, "Coins", 10, 25);
-            ConfigureDropOnDestroyed(ironDepositPrefab, "IronOre", 1, 2);
-            ConfigureDropOnDestroyed(silverDepositPrefab, "SilverOre", 1, 2);
-            ConfigureDropOnDestroyed(blackmetalDepositPrefab, "BlackMetalScrap", 1, 2);
+            ConfigureDropOnDestroyed(ironDepositPrefab, "IronOre", 2, 3);
+            ConfigureDropOnDestroyed(silverDepositPrefab, "SilverOre", 2, 3);
+            ConfigureDropOnDestroyed(blackmetalDepositPrefab, "BlackMetalScrap", 2, 3);
 
             ConfigureHoverText(goldDepositPrefab, "$Gold");
             ConfigureHoverText(ironDepositPrefab, "$Iron");
