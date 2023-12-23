@@ -95,10 +95,10 @@ namespace MoreOreDeposits
         // Define the vegetation configuration
         VegetationConfig goldDepositConfig = new VegetationConfig
          {
-            Biome = ZoneManager.AnyBiomeOf(Heightmap.Biome.Swamp | Heightmap.Biome.BlackForest | Heightmap.Biome.Mistlands),
+            Biome = Heightmap.Biome.BlackForest,
             BlockCheck = true,
-            Min = 10,
-            Max = 20,
+            Min = 0,
+            Max = 2,
             GroundOffset = -0.3f,
             ScaleMin = 295,
             ScaleMax = 296,
@@ -110,8 +110,8 @@ namespace MoreOreDeposits
         {
             Biome = Heightmap.Biome.Swamp,
             BlockCheck = true,
-            Min = 10,
-            Max = 20,
+            Min = 0,
+            Max = 2,
             GroundOffset = -0.3f,
             ScaleMin = 295,
             ScaleMax = 296,
@@ -123,8 +123,8 @@ namespace MoreOreDeposits
         {
             Biome = Heightmap.Biome.Mountain,
             BlockCheck = true,
-            Min = 10,
-            Max = 20,
+            Min = 0,
+            Max = 2,
             GroundOffset = -0.3f,
             ScaleMin = 295,
             ScaleMax = 296,
@@ -136,8 +136,8 @@ namespace MoreOreDeposits
         {
             Biome = Heightmap.Biome.Plains,
             BlockCheck = true,
-            Min = 10,
-            Max = 20,
+            Min = 0,
+            Max = 2,
             GroundOffset = -0.3f,
             ScaleMin = 295,
             ScaleMax = 296,
