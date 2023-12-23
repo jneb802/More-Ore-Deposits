@@ -17,7 +17,7 @@ namespace MoreOreDeposits
     {
         public const string PluginGUID = "com.bepinex.MoreOreDeposits";
         public const string PluginName = "More Ore Deposits";
-        public const string PluginVersion = "0.0.1";
+        public const string PluginVersion = "1.1.0";
 
         // Use this class to add your own localization to the game
         // https://valheim-modding.github.io/Jotunn/tutorials/localization.html

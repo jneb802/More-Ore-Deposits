@@ -48,7 +48,7 @@ Prefab name: MineRock_silver
 
 Prefab name: MineRock_blackmetal
 - Biomes: Plains
-- Tool tier requirement: 3 (Blackmetal Pickaxe)
+- Tool tier requirement: 2 (Iron Pickaxe)
 - Spawn per zone: 0 - 2
 - Drops: 2 - 3 blackmetal_scraps
 
