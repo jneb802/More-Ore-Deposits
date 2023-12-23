@@ -1,4 +1,4 @@
-!(https://i.imgur.com/P5YqhgM.png)
+![Ore Deposits](https://i.imgur.com/P5YqhgM.png)
 
 # More Ore Deposits
 The goal of this mod is to add additional small ore deposits to the world. You can mine the deposits just like you would any other and you'll also receive drops. Each ore deposit will be added during world generation (see known issues) and appear in it's relevant biome. 
