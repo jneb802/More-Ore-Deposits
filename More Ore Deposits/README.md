@@ -27,13 +27,12 @@ If you'd like to only add some of the ore: First adjust the command by removing 
 
 
 ## Mod details:
-``
+
 Prefab name: MineRock_gold
 - Biomes: Blackforest
 - Tool tier requirement: 0 (Antler Pickaxe)
 - Spawn per zone: 0 - 2
 - Drops: 10 - 25 coins
-``
 
 Prefab name: MineRock_iron
 - Biomes: Swamp
