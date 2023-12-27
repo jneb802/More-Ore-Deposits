@@ -60,4 +60,7 @@ Prefab name: MineRock_blackmetal
 ## Support & Feedback
 Please give me feedback if you have any thoughts about the mods! Whether it's balance, models / textures, or just more ideas, I'd love to hear your input. If you have any issues you can also ask. You can find my in the OdinPlus discord.
 
+## Credit & thanks
+I'd like to thank CookieMilk, Searica, Margmus, and Horem for their guidance and help in making this mod. I am amazed by the kindness and willingness to help that is present in the Valheim mod developer community. If your someone who aspires to develop mods and is willing to put in the effort I'm sure you will receive the same treatment. Give it a shot!
+
 Github link: https://github.com/jneb802/More-Ore-Deposits

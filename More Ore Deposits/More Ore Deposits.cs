@@ -7,6 +7,7 @@ using UnityEngine;
 using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
+using HarmonyLib;
 
 namespace MoreOreDeposits
 {
@@ -25,6 +26,7 @@ namespace MoreOreDeposits
 
         private AssetBundle goldAssetBundle;
         private GameObject goldDepositPrefab;
+        private GameObject goldOrePrefab;
 
         private AssetBundle ironAssetBundle;
         private GameObject ironDepositPrefab;
@@ -43,6 +45,10 @@ namespace MoreOreDeposits
             // Subscribe to the OnVanillaPrefabsAvailable event
             PrefabManager.OnVanillaPrefabsAvailable += OnPrefabsAvailable;
 
+            // Apply Harmony patches
+            var harmony = new Harmony(PluginGUID);
+            harmony.PatchAll();
+
         }
 
         private void OnPrefabsAvailable()
@@ -50,6 +56,7 @@ namespace MoreOreDeposits
 
             // Load assets and add vegetation here
             LoadAssets();
+            CreateGoldOre();
             AddVegetation();
 
             // Unsubscribe if you only want to execute this once
@@ -60,6 +67,7 @@ namespace MoreOreDeposits
         {
             goldAssetBundle = AssetUtils.LoadAssetBundleFromResources("gold_bundle");
             goldDepositPrefab = goldAssetBundle?.LoadAsset<GameObject>("MineRock_gold");
+            goldOrePrefab = goldAssetBundle?.LoadAsset<GameObject>("GoldOre");
 
             ironAssetBundle = AssetUtils.LoadAssetBundleFromResources("iron_bundle");
             ironDepositPrefab = ironAssetBundle?.LoadAsset<GameObject>("MineRock_iron");
@@ -94,7 +102,7 @@ namespace MoreOreDeposits
 
         // Define the vegetation configuration
         VegetationConfig goldDepositConfig = new VegetationConfig
-         {
+        {
             Biome = Heightmap.Biome.BlackForest,
             BlockCheck = true,
             Min = 0,
@@ -144,6 +152,45 @@ namespace MoreOreDeposits
 
         };
 
+        // Configure gold ore item config and add item to game
+        private void CreateGoldOre()
+        {
+
+            var goldOreItem = new CustomItem(goldOrePrefab, false);
+            ItemManager.Instance.AddItem(goldOreItem);
+
+            var goldOreSmelterConfig = new SmelterConversionConfig();
+            goldOreSmelterConfig.FromItem = "GoldOre";
+            goldOreSmelterConfig.ToItem = "Coins";
+            goldOreSmelterConfig.Station = Smelters.Smelter;
+            ItemManager.Instance.AddItemConversion(new CustomItemConversion(goldOreSmelterConfig));
+
+            ConfigureGoldOreAutoPickup("GoldOre");
+
+        }
+
+        private void ConfigureGoldOreAutoPickup(string itemName)
+        {
+            // Get the prefab for the gold ore item
+            GameObject itemPrefab = PrefabManager.Instance.GetPrefab(itemName);
+            if (itemPrefab == null)
+            {
+                Debug.LogError($"Prefab '{itemName}' not found.");
+                return;
+            }
+
+            // Get the existing ItemDrop component from the prefab
+            ItemDrop itemDrop = itemPrefab.GetComponent<ItemDrop>();
+            if (itemDrop == null)
+            {
+                Debug.LogError($"ItemDrop component not found on prefab '{itemName}'.");
+                return;
+            }
+
+            // Set the item to auto-pickup
+            itemDrop.m_autoPickup = true;
+        }
+
         private void AddVegetation()
         {
             // Ensure all prefabs are loaded
@@ -158,7 +205,7 @@ namespace MoreOreDeposits
             ConfigureDestructible(silverDepositPrefab, 2, 30f);
             ConfigureDestructible(blackmetalDepositPrefab, 2, 30f);
 
-            ConfigureDropOnDestroyed(goldDepositPrefab, "Coins", 10, 25);
+            ConfigureDropOnDestroyed(goldDepositPrefab, "GoldOre", 2, 3);
             ConfigureDropOnDestroyed(ironDepositPrefab, "IronOre", 2, 3);
             ConfigureDropOnDestroyed(silverDepositPrefab, "SilverOre", 2, 3);
             ConfigureDropOnDestroyed(blackmetalDepositPrefab, "BlackMetalScrap", 2, 3);
@@ -239,5 +286,19 @@ namespace MoreOreDeposits
         }
 
     }
-    
+
+    // Harmony patch class
+    [HarmonyPatch(typeof(Smelter), "Spawn")]
+    static class SmelterProduceMore
+    {
+        static void Prefix(Smelter __instance, string ore, ref int stack)
+        {
+            if (!__instance) return;
+            if (ore == "GoldOre") // Make sure this matches the exact name of your ore item
+            {
+                stack *= 10; // Multiply the stack by 10 for gold ore
+            }
+        }
+    }
+
 }
