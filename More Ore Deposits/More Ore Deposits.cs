@@ -241,7 +241,7 @@ namespace MoreOreDeposits
             ConfigureDestructible(silverDepositPrefab, 2, 30f);
             ConfigureDestructible(blackmetalDepositPrefab, 2, 30f);
 
-            ConfigureDropOnDestroyed(goldDepositPrefab, "GoldOre", 2, 3);
+            ConfigureDropOnDestroyed(goldDepositPrefab, "GoldOre", 1, 2);
             ConfigureDropOnDestroyed(ironDepositPrefab, "IronOre", 2, 3);
             ConfigureDropOnDestroyed(silverDepositPrefab, "SilverOre", 2, 3);
             ConfigureDropOnDestroyed(blackmetalDepositPrefab, "BlackMetalScrap", 2, 3);
