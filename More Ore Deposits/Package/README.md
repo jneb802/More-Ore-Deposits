@@ -9,6 +9,7 @@ The goal of this mod is to add additional small ore deposits to the world. You c
 - Adds small iron ore deposit to the Swamp biome
 - Adds small silver ore deposit to the Mountain biome
 - Adds small blackmetal ore deposit to the Plains biome
+- Translated in all 36 Valheim languages using my [localization script](https://valheim.fandom.com/wiki/Console_Commands)
 
 ## Instructions
 **New World**: No additional steps required; ore deposits spawn during world generation.

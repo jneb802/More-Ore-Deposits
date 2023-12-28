@@ -37,6 +37,8 @@ namespace MoreOreDeposits
         private AssetBundle blackmetalAssetBundle;
         private GameObject blackmetalDepositPrefab;
 
+        private AssetBundle translationBundle;
+
         private void Awake()
         {
             // Jotunn comes with its own Logger class to provide a consistent Log style for all mods using it
@@ -51,6 +53,36 @@ namespace MoreOreDeposits
 
         }
 
+        private void AddlocalizationsEnglish()
+        {
+            Localization = LocalizationManager.Instance.GetLocalization();
+            Localization.AddTranslation("English", new Dictionary<string, string>
+            {
+              {"GoldOre_warp", "Gold ore" },
+              { "GoldOre_desc_warp", "Unrefined gold. Use a smelter to refine into gold coins." },
+              { "GoldDeposit_warp", "Gold" },
+              { "IronDeposit_warp", "Iron" },
+              { "SilverDepositSmall_warp", "Silver" },
+              { "BlackmetalDeposit_warp", "Blackmetal" }
+            });
+        }
+
+        private void JSONS()
+        {
+            if (translationBundle == null)
+            {
+                return;
+            }
+
+            TextAsset[] textAssets = translationBundle.LoadAllAssets<TextAsset>();
+
+            foreach (var textAsset in textAssets)
+            {
+                var lang = textAsset.name.Replace("_MoreOreDeposits", "");
+                Localization.AddJsonFile(lang, textAsset.text);
+            }
+        }
+
         private void OnPrefabsAvailable()
         {
 
@@ -58,6 +90,8 @@ namespace MoreOreDeposits
             LoadAssets();
             CreateGoldOre();
             AddVegetation();
+            AddlocalizationsEnglish();
+            JSONS();
 
             // Unsubscribe if you only want to execute this once
             PrefabManager.OnVanillaPrefabsAvailable -= OnPrefabsAvailable;
@@ -77,6 +111,8 @@ namespace MoreOreDeposits
 
             blackmetalAssetBundle = AssetUtils.LoadAssetBundleFromResources("blackmetal_bundle");
             blackmetalDepositPrefab = blackmetalAssetBundle?.LoadAsset<GameObject>("MineRock_blackmetal");
+
+            translationBundle = AssetUtils.LoadAssetBundleFromResources("translations_bundle");
 
             LogResourceNamesAndCheckErrors();
         }
@@ -210,10 +246,10 @@ namespace MoreOreDeposits
             ConfigureDropOnDestroyed(silverDepositPrefab, "SilverOre", 2, 3);
             ConfigureDropOnDestroyed(blackmetalDepositPrefab, "BlackMetalScrap", 2, 3);
 
-            ConfigureHoverText(goldDepositPrefab, "$Gold");
-            ConfigureHoverText(ironDepositPrefab, "$Iron");
-            ConfigureHoverText(silverDepositPrefab, "$Silver");
-            ConfigureHoverText(blackmetalDepositPrefab, "$Blackmetal");
+            ConfigureHoverText(goldDepositPrefab, "$GoldDeposit_warp");
+            ConfigureHoverText(ironDepositPrefab, "$IronDeposit_warp");
+            ConfigureHoverText(silverDepositPrefab, "$SilverDepositSmall_warp");
+            ConfigureHoverText(blackmetalDepositPrefab, "$BlackmetalDeposit_warp");
 
             CustomVegetation goldDepositVegetation = new CustomVegetation(goldDepositPrefab, false, goldDepositConfig);
             CustomVegetation ironDepositVegetation = new CustomVegetation(ironDepositPrefab, false, ironDepositConfig);

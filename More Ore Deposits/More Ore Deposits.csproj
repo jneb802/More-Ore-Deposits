@@ -122,6 +122,7 @@
     <EmbeddedResource Include="assets\iron_bundle" />
     <EmbeddedResource Include="assets\silver_bundle" />
     <EmbeddedResource Include="assets\gold_bundle" />
+    <EmbeddedResource Include="assets\translations_bundle" />
     <None Include="packages.config" />
     <None Include="README.md" />
   </ItemGroup>
