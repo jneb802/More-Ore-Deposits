@@ -8,6 +8,7 @@ using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
 using HarmonyLib;
+using BepInEx.Configuration;
 
 namespace MoreOreDeposits
 {
@@ -39,6 +40,8 @@ namespace MoreOreDeposits
 
         private AssetBundle translationBundle;
 
+        private ModConfig modConfig;
+
         private void Awake()
         {
             // Jotunn comes with its own Logger class to provide a consistent Log style for all mods using it
@@ -50,6 +53,8 @@ namespace MoreOreDeposits
             // Apply Harmony patches
             var harmony = new Harmony(PluginGUID);
             harmony.PatchAll();
+
+            modConfig = new ModConfig(Config);
 
         }
 
@@ -80,6 +85,30 @@ namespace MoreOreDeposits
             {
                 var lang = textAsset.name.Replace("_MoreOreDeposits", "");
                 Localization.AddJsonFile(lang, textAsset.text);
+            }
+        }
+
+        public class ModConfig
+        {
+            public ConfigEntry<int> GoldOreDropMin;
+            public ConfigEntry<int> GoldOreDropMax;
+            public ConfigEntry<int> IronOreDropMin;
+            public ConfigEntry<int> IronOreDropMax;
+            public ConfigEntry<int> SilverOreDropMin;
+            public ConfigEntry<int> SilverOreDropMax;
+            public ConfigEntry<int> BlackmetalScrapDropMin;
+            public ConfigEntry<int> BlackmetalScrapDropMax;
+
+            public ModConfig(ConfigFile config)
+            {
+                GoldOreDropMin = config.Bind("Drop Settings", "Gold Ore Drop Min", 1, "Minimum amount of Gold Ore dropped from gold deposit");
+                GoldOreDropMax = config.Bind("Drop Settings", "Gold Ore Drop Max", 2, "Maximum amount of Gold Ore dropped from gold deposit");
+                IronOreDropMin = config.Bind("Drop Settings", "Iron Ore Drop Min", 2, "Minimum amount of Iron Ore dropped from iron deposit");
+                IronOreDropMax = config.Bind("Drop Settings", "Iron Ore Drop Max", 3, "Maximum amount of Iron Ore dropped from iron deposit");
+                SilverOreDropMin = config.Bind("Drop Settings", "Silver Ore Drop Min", 2, "Minimum amount of Silver Ore dropped from small silver deposit");
+                SilverOreDropMax = config.Bind("Drop Settings", "Silver Ore Drop Max", 3, "Maximum amount of Silver Ore dropped from small silver deposit");
+                BlackmetalScrapDropMin = config.Bind("Drop Settings", "Blackmetal Scrap Drop Min", 2, "Minimum amount of Blackmetal Scrap dropped from blackmetal deposit");
+                BlackmetalScrapDropMax = config.Bind("Drop Settings", "Blackmetal Scrap Drop Max", 3, "Maximum amount of Blackmetal Scrap dropped from blackmetal deposit");
             }
         }
 
@@ -241,10 +270,10 @@ namespace MoreOreDeposits
             ConfigureDestructible(silverDepositPrefab, 2, 30f);
             ConfigureDestructible(blackmetalDepositPrefab, 2, 30f);
 
-            ConfigureDropOnDestroyed(goldDepositPrefab, "GoldOre", 1, 2);
-            ConfigureDropOnDestroyed(ironDepositPrefab, "IronOre", 2, 3);
-            ConfigureDropOnDestroyed(silverDepositPrefab, "SilverOre", 2, 3);
-            ConfigureDropOnDestroyed(blackmetalDepositPrefab, "BlackMetalScrap", 2, 3);
+            ConfigureDropOnDestroyed(goldDepositPrefab, "GoldOre", modConfig.GoldOreDropMin.Value, modConfig.GoldOreDropMax.Value);
+            ConfigureDropOnDestroyed(ironDepositPrefab, "IronOre", modConfig.IronOreDropMin.Value, modConfig.IronOreDropMax.Value);
+            ConfigureDropOnDestroyed(silverDepositPrefab, "SilverOre", modConfig.SilverOreDropMin.Value, modConfig.SilverOreDropMax.Value);
+            ConfigureDropOnDestroyed(blackmetalDepositPrefab, "BlackMetalScrap", modConfig.BlackmetalScrapDropMin.Value, modConfig.BlackmetalScrapDropMax.Value);
 
             ConfigureHoverText(goldDepositPrefab, "$GoldDeposit_warp");
             ConfigureHoverText(ironDepositPrefab, "$IronDeposit_warp");
