@@ -57,7 +57,6 @@ Prefab name: MineRock_blackmetal
 
 ## Known issues
 1. Not currently compatible with SmoothBrain's Mining skill mod. I would like to make them compatible but struggled to get the code working.
-2. The hover text for the ores has square brackets around it.
 
 ## Support & Feedback
 Please give me feedback if you have any thoughts about the mods! Whether it's balance, models / textures, or just more ideas, I'd love to hear your input. If you have any issues you can also ask. You can find my in the OdinPlus discord.

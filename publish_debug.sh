@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DLL=MoreOreDeposits/bin/Debug/MoreOreDeposits.dll
-PLUGINS=/home/$USER/.local/share/Steam/steamapps/common/Valheim/BepInEx/plugins
+PLUGINS=C:\Users\jneb8\AppData\Roaming\r2modmanPlus-local\Valheim\profiles\ValheimModDev\BepInEx\plugins
 
 # Check that source files exist and are readable
 if [ ! -f "$DLL" ]; then

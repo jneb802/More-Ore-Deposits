@@ -112,6 +112,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigManager.cs" />
+    <Compile Include="Configuration.cs" />
+    <Compile Include="ConfigWatcher.cs" />
     <Compile Include="Properties\IgnoreAccessModifiers.cs" />
     <Compile Include="More Ore Deposits.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

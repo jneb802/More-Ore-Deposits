@@ -9,13 +9,14 @@ using System.Reflection;
 using System.Collections.Generic;
 using HarmonyLib;
 using BepInEx.Configuration;
+using Configuration;
 
 namespace MoreOreDeposits
 {
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
     [BepInDependency(Jotunn.Main.ModGuid)]
     //[NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.Minor)]
-    internal class MoreOreDeposits : BaseUnityPlugin
+    internal class MoreOreDeposits : BaseUnityPlugin, Configuration.IPlugin
     {
         public const string PluginGUID = "com.bepinex.MoreOreDeposits";
         public const string PluginName = "More Ore Deposits";
@@ -24,6 +25,14 @@ namespace MoreOreDeposits
         // Use this class to add your own localization to the game
         // https://valheim-modding.github.io/Jotunn/tutorials/localization.html
         public static CustomLocalization Localization = LocalizationManager.Instance.GetLocalization();
+
+        ConfigFile Configuration.IPlugin.Config => this.Config;
+        private bool settingsUpdated = false;
+
+        private OreDropConfig goldOreConfig;
+        private OreDropConfig ironOreConfig;
+        private OreDropConfig silverOreConfig;
+        private OreDropConfig blackmetalOreConfig;
 
         private AssetBundle goldAssetBundle;
         private GameObject goldDepositPrefab;
@@ -40,8 +49,6 @@ namespace MoreOreDeposits
 
         private AssetBundle translationBundle;
 
-        private ModConfig modConfig;
-
         private void Awake()
         {
             // Jotunn comes with its own Logger class to provide a consistent Log style for all mods using it
@@ -54,8 +61,70 @@ namespace MoreOreDeposits
             var harmony = new Harmony(PluginGUID);
             harmony.PatchAll();
 
-            modConfig = new ModConfig(Config);
+            SynchronizationManager.OnConfigurationSynchronized += OnConfigurationSynchronized;
+            Config.ConfigReloaded += OnConfigReloaded;
 
+            var _ = new ConfigWatcher(this);
+
+            InitializeOreConfigs();
+
+        }
+
+        private void InitializeOreConfigs()
+        {
+
+            AcceptableValueRange<int> intRange = new AcceptableValueRange<int>(1, 100); // Define a range for integers.
+
+            // Initialize ore configurations
+            goldOreConfig = OreDropConfig.GetFromProps(this, "GoldOre", 1, 2);
+            ironOreConfig = OreDropConfig.GetFromProps(this, "IronOre", 2, 3);
+            silverOreConfig = OreDropConfig.GetFromProps(this, "SilverOre", 2, 3);
+            blackmetalOreConfig = OreDropConfig.GetFromProps(this, "BlackmetalScrap", 2, 3);
+
+            // Optionally add handlers for settings changes
+            goldOreConfig.AddSettingsChangedHandler(OnSettingsChanged);
+            ironOreConfig.AddSettingsChangedHandler(OnSettingsChanged);
+            silverOreConfig.AddSettingsChangedHandler(OnSettingsChanged);
+            blackmetalOreConfig.AddSettingsChangedHandler(OnSettingsChanged);
+        }
+        
+        // This is meant to re-run the ConfigureDropOnDestroyed method each time the settings change
+        private void UpdateFeatures()
+        {
+            settingsUpdated = false;
+            ConfigureDropOnDestroyed(goldDepositPrefab, goldOreConfig);
+            ConfigureDropOnDestroyed(ironDepositPrefab, ironOreConfig);
+            ConfigureDropOnDestroyed(silverDepositPrefab, silverOreConfig);
+            ConfigureDropOnDestroyed(blackmetalDepositPrefab, blackmetalOreConfig);
+        }
+
+        private void OnSettingsChanged(object sender, System.EventArgs e)
+        {
+            settingsUpdated = true;
+        }
+
+        private void OnConfigReloaded(object sender, System.EventArgs e)
+        {
+            if (settingsUpdated)
+            {
+                UpdateFeatures();
+            }
+        }
+
+        private void OnConfigurationSynchronized(object sender, ConfigurationSynchronizationEventArgs e)
+        {
+            UpdateFeatures();
+        }
+
+        private DropTable.DropData getDropDataFromEntry(OreDropConfig entry)
+        {
+            return new DropTable.DropData
+            {
+                m_item = PrefabManager.Instance.GetPrefab(entry.OreName),
+                m_stackMin = entry.DropMin.Value,
+                m_stackMax = entry.DropMax.Value,
+                m_weight = 1f // Assuming a fixed weight, adjust as necessary
+            };
         }
 
         private void AddlocalizationsEnglish()
@@ -85,30 +154,6 @@ namespace MoreOreDeposits
             {
                 var lang = textAsset.name.Replace("_MoreOreDeposits", "");
                 Localization.AddJsonFile(lang, textAsset.text);
-            }
-        }
-
-        public class ModConfig
-        {
-            public ConfigEntry<int> GoldOreDropMin;
-            public ConfigEntry<int> GoldOreDropMax;
-            public ConfigEntry<int> IronOreDropMin;
-            public ConfigEntry<int> IronOreDropMax;
-            public ConfigEntry<int> SilverOreDropMin;
-            public ConfigEntry<int> SilverOreDropMax;
-            public ConfigEntry<int> BlackmetalScrapDropMin;
-            public ConfigEntry<int> BlackmetalScrapDropMax;
-
-            public ModConfig(ConfigFile config)
-            {
-                GoldOreDropMin = config.Bind("Drop Settings", "Gold Ore Drop Min", 1, "Minimum amount of Gold Ore dropped from gold deposit");
-                GoldOreDropMax = config.Bind("Drop Settings", "Gold Ore Drop Max", 2, "Maximum amount of Gold Ore dropped from gold deposit");
-                IronOreDropMin = config.Bind("Drop Settings", "Iron Ore Drop Min", 2, "Minimum amount of Iron Ore dropped from iron deposit");
-                IronOreDropMax = config.Bind("Drop Settings", "Iron Ore Drop Max", 3, "Maximum amount of Iron Ore dropped from iron deposit");
-                SilverOreDropMin = config.Bind("Drop Settings", "Silver Ore Drop Min", 2, "Minimum amount of Silver Ore dropped from small silver deposit");
-                SilverOreDropMax = config.Bind("Drop Settings", "Silver Ore Drop Max", 3, "Maximum amount of Silver Ore dropped from small silver deposit");
-                BlackmetalScrapDropMin = config.Bind("Drop Settings", "Blackmetal Scrap Drop Min", 2, "Minimum amount of Blackmetal Scrap dropped from blackmetal deposit");
-                BlackmetalScrapDropMax = config.Bind("Drop Settings", "Blackmetal Scrap Drop Max", 3, "Maximum amount of Blackmetal Scrap dropped from blackmetal deposit");
             }
         }
 
@@ -270,10 +315,10 @@ namespace MoreOreDeposits
             ConfigureDestructible(silverDepositPrefab, 2, 30f);
             ConfigureDestructible(blackmetalDepositPrefab, 2, 30f);
 
-            ConfigureDropOnDestroyed(goldDepositPrefab, "GoldOre", modConfig.GoldOreDropMin.Value, modConfig.GoldOreDropMax.Value);
-            ConfigureDropOnDestroyed(ironDepositPrefab, "IronOre", modConfig.IronOreDropMin.Value, modConfig.IronOreDropMax.Value);
-            ConfigureDropOnDestroyed(silverDepositPrefab, "SilverOre", modConfig.SilverOreDropMin.Value, modConfig.SilverOreDropMax.Value);
-            ConfigureDropOnDestroyed(blackmetalDepositPrefab, "BlackMetalScrap", modConfig.BlackmetalScrapDropMin.Value, modConfig.BlackmetalScrapDropMax.Value);
+            ConfigureDropOnDestroyed(goldDepositPrefab, goldOreConfig);
+            ConfigureDropOnDestroyed(ironDepositPrefab, ironOreConfig);
+            ConfigureDropOnDestroyed(silverDepositPrefab, silverOreConfig);
+            ConfigureDropOnDestroyed(blackmetalDepositPrefab, blackmetalOreConfig);
 
             ConfigureHoverText(goldDepositPrefab, "$GoldDeposit_warp");
             ConfigureHoverText(ironDepositPrefab, "$IronDeposit_warp");
@@ -316,19 +361,28 @@ namespace MoreOreDeposits
             };
         }
 
-        private void ConfigureDropOnDestroyed(GameObject prefab, string itemName, int minStack, int maxStack)
+        //private void ConfigureDropOnDestroyed(GameObject prefab, string itemName, int minStack, int maxStack)
+        //{
+        //    var dropOnDestroyed = prefab.GetComponent<DropOnDestroyed>() ?? prefab.AddComponent<DropOnDestroyed>();
+        //        dropOnDestroyed.m_dropWhenDestroyed.m_drops = new List<DropTable.DropData>
+        //    {
+        //        new DropTable.DropData
+        //        {
+        //            m_item = PrefabManager.Instance.GetPrefab(itemName),
+        //            m_stackMin = minStack,
+        //            m_stackMax = maxStack,
+        //            m_weight = 1f
+        //        },
+        //    };
+        //}
+
+        private void ConfigureDropOnDestroyed(GameObject prefab, OreDropConfig oreConfig)
         {
             var dropOnDestroyed = prefab.GetComponent<DropOnDestroyed>() ?? prefab.AddComponent<DropOnDestroyed>();
-                dropOnDestroyed.m_dropWhenDestroyed.m_drops = new List<DropTable.DropData>
-            {
-                new DropTable.DropData
+            dropOnDestroyed.m_dropWhenDestroyed.m_drops = new List<DropTable.DropData>
                 {
-                    m_item = PrefabManager.Instance.GetPrefab(itemName),
-                    m_stackMin = minStack,
-                    m_stackMax = maxStack,
-                    m_weight = 1f
-                },
-            };
+                    getDropDataFromEntry(oreConfig)
+                };
         }
 
         private void ConfigureHoverText(GameObject prefab, string hoverText)
