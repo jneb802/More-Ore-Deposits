@@ -73,8 +73,6 @@ namespace MoreOreDeposits
         private void InitializeOreConfigs()
         {
 
-            AcceptableValueRange<int> intRange = new AcceptableValueRange<int>(1, 100); // Define a range for integers.
-
             // Initialize ore configurations
             goldOreConfig = OreDropConfig.GetFromProps(this, "GoldOre", 1, 2);
             ironOreConfig = OreDropConfig.GetFromProps(this, "IronOre", 2, 3);
