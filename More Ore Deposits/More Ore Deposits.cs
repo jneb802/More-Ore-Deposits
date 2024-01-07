@@ -21,7 +21,7 @@ namespace MoreOreDeposits
         #region Plugin Info
         public const string PluginGUID = "com.bepinex.MoreOreDeposits";
         public const string PluginName = "More Ore Deposits";
-        public const string PluginVersion = "1.2.0";
+        public const string PluginVersion = "1.2.1";
         #endregion
 
         #region Unity Lifecycle
