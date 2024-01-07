@@ -10,6 +10,7 @@ The goal of this mod is to add additional small ore deposits to the world. You c
 - Adds small silver ore deposit to the Mountain biome
 - Adds small blackmetal ore deposit to the Plains biome
 - Adds gold ore item that drops from gold ore deposit. Gold ore can be smelted for gold coins.
+- Ore drop rates are configurable in configuration manager
 - Translated in all 36 Valheim languages
 
 ## Instructions
@@ -57,7 +58,7 @@ Prefab name: MineRock_blackmetal
 
 ## Known issues
 1. Not currently compatible with SmoothBrain's Mining skill mod. I would like to make them compatible but struggled to get the code working.
-2. If you enter an invalid string (such as 
+2. If you enter an invalid string (such as '/' in the configuration fields it will send an error. The error is harmless and won't break anything.
 
 ## Support & Feedback
 Please give me feedback if you have any thoughts about the mods! Whether it's balance, models / textures, or just more ideas, I'd love to hear your input. If you have any issues you can also ask. You can find my in the OdinPlus discord.

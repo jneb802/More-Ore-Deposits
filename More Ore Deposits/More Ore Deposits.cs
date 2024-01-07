@@ -18,37 +18,13 @@ namespace MoreOreDeposits
     //[NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.Minor)]
     internal class MoreOreDeposits : BaseUnityPlugin, Configuration.IPlugin
     {
+        #region Plugin Info
         public const string PluginGUID = "com.bepinex.MoreOreDeposits";
         public const string PluginName = "More Ore Deposits";
-        public const string PluginVersion = "1.1.0";
+        public const string PluginVersion = "1.2.0";
+        #endregion
 
-        // Use this class to add your own localization to the game
-        // https://valheim-modding.github.io/Jotunn/tutorials/localization.html
-        public static CustomLocalization Localization = LocalizationManager.Instance.GetLocalization();
-
-        ConfigFile Configuration.IPlugin.Config => this.Config;
-        private bool settingsUpdated = false;
-
-        private OreDropConfig goldOreConfig;
-        private OreDropConfig ironOreConfig;
-        private OreDropConfig silverOreConfig;
-        private OreDropConfig blackmetalOreConfig;
-
-        private AssetBundle goldAssetBundle;
-        private GameObject goldDepositPrefab;
-        private GameObject goldOrePrefab;
-
-        private AssetBundle ironAssetBundle;
-        private GameObject ironDepositPrefab;
-
-        private AssetBundle silverAssetBundle;
-        private GameObject silverDepositPrefab;
-
-        private AssetBundle blackmetalAssetBundle;
-        private GameObject blackmetalDepositPrefab;
-
-        private AssetBundle translationBundle;
-
+        #region Unity Lifecycle
         private void Awake()
         {
             // Jotunn comes with its own Logger class to provide a consistent Log style for all mods using it
@@ -70,6 +46,64 @@ namespace MoreOreDeposits
 
         }
 
+        private void OnPrefabsAvailable()
+        {
+
+            // Load assets and add vegetation here
+            LoadAssets();
+            CreateGoldOre();
+            AddVegetation();
+            AddlocalizationsEnglish();
+            JSONS();
+
+            // Unsubscribe if you only want to execute this once
+            PrefabManager.OnVanillaPrefabsAvailable -= OnPrefabsAvailable;
+        }
+        #endregion
+
+        #region Localizations
+        public static CustomLocalization Localization = LocalizationManager.Instance.GetLocalization();
+
+        private void AddlocalizationsEnglish()
+        {
+            Localization = LocalizationManager.Instance.GetLocalization();
+            Localization.AddTranslation("English", new Dictionary<string, string>
+            {
+              {"GoldOre_warp", "Gold ore" },
+              { "GoldOre_desc_warp", "Unrefined gold. Use a smelter to refine into gold coins." },
+              { "GoldDeposit_warp", "Gold" },
+              { "IronDeposit_warp", "Iron" },
+              { "SilverDepositSmall_warp", "Silver" },
+              { "BlackmetalDeposit_warp", "Blackmetal" }
+            });
+        }
+
+        private void JSONS()
+        {
+            if (translationBundle == null)
+            {
+                return;
+            }
+
+            TextAsset[] textAssets = translationBundle.LoadAllAssets<TextAsset>();
+
+            foreach (var textAsset in textAssets)
+            {
+                var lang = textAsset.name.Replace("_MoreOreDeposits", "");
+                Localization.AddJsonFile(lang, textAsset.text);
+            }
+        }
+        #endregion
+
+        #region Configuration
+        ConfigFile Configuration.IPlugin.Config => this.Config;
+        private bool settingsUpdated = false;
+
+        private OreDropConfig goldOreConfig;
+        private OreDropConfig ironOreConfig;
+        private OreDropConfig silverOreConfig;
+        private OreDropConfig blackmetalOreConfig;
+
         private void InitializeOreConfigs()
         {
 
@@ -77,7 +111,7 @@ namespace MoreOreDeposits
             goldOreConfig = OreDropConfig.GetFromProps(this, "GoldOre", 1, 2);
             ironOreConfig = OreDropConfig.GetFromProps(this, "IronOre", 2, 3);
             silverOreConfig = OreDropConfig.GetFromProps(this, "SilverOre", 2, 3);
-            blackmetalOreConfig = OreDropConfig.GetFromProps(this, "BlackmetalScrap", 2, 3);
+            blackmetalOreConfig = OreDropConfig.GetFromProps(this, "BlackMetalScrap", 2, 3);
 
             // Optionally add handlers for settings changes
             goldOreConfig.AddSettingsChangedHandler(OnSettingsChanged);
@@ -85,8 +119,7 @@ namespace MoreOreDeposits
             silverOreConfig.AddSettingsChangedHandler(OnSettingsChanged);
             blackmetalOreConfig.AddSettingsChangedHandler(OnSettingsChanged);
         }
-        
-        // This is meant to re-run the ConfigureDropOnDestroyed method each time the settings change
+
         private void UpdateFeatures()
         {
             settingsUpdated = false;
@@ -124,50 +157,23 @@ namespace MoreOreDeposits
                 m_weight = 1f // Assuming a fixed weight, adjust as necessary
             };
         }
+        #endregion
 
-        private void AddlocalizationsEnglish()
-        {
-            Localization = LocalizationManager.Instance.GetLocalization();
-            Localization.AddTranslation("English", new Dictionary<string, string>
-            {
-              {"GoldOre_warp", "Gold ore" },
-              { "GoldOre_desc_warp", "Unrefined gold. Use a smelter to refine into gold coins." },
-              { "GoldDeposit_warp", "Gold" },
-              { "IronDeposit_warp", "Iron" },
-              { "SilverDepositSmall_warp", "Silver" },
-              { "BlackmetalDeposit_warp", "Blackmetal" }
-            });
-        }
+        #region Asset Bundles and Prefabs
+        private AssetBundle goldAssetBundle;
+        private GameObject goldDepositPrefab;
+        private GameObject goldOrePrefab;
 
-        private void JSONS()
-        {
-            if (translationBundle == null)
-            {
-                return;
-            }
+        private AssetBundle ironAssetBundle;
+        private GameObject ironDepositPrefab;
 
-            TextAsset[] textAssets = translationBundle.LoadAllAssets<TextAsset>();
+        private AssetBundle silverAssetBundle;
+        private GameObject silverDepositPrefab;
 
-            foreach (var textAsset in textAssets)
-            {
-                var lang = textAsset.name.Replace("_MoreOreDeposits", "");
-                Localization.AddJsonFile(lang, textAsset.text);
-            }
-        }
+        private AssetBundle blackmetalAssetBundle;
+        private GameObject blackmetalDepositPrefab;
 
-        private void OnPrefabsAvailable()
-        {
-
-            // Load assets and add vegetation here
-            LoadAssets();
-            CreateGoldOre();
-            AddVegetation();
-            AddlocalizationsEnglish();
-            JSONS();
-
-            // Unsubscribe if you only want to execute this once
-            PrefabManager.OnVanillaPrefabsAvailable -= OnPrefabsAvailable;
-        }
+        private AssetBundle translationBundle;
 
         private void LoadAssets()
         {
@@ -207,7 +213,49 @@ namespace MoreOreDeposits
                 Jotunn.Logger.LogError($"Failed to load the {bundleName} asset bundle.");
             }
         }
+        #endregion
 
+        #region ItemManager
+        private void CreateGoldOre()
+        {
+
+            var goldOreItem = new CustomItem(goldOrePrefab, false);
+            ItemManager.Instance.AddItem(goldOreItem);
+
+            var goldOreSmelterConfig = new SmelterConversionConfig();
+            goldOreSmelterConfig.FromItem = "GoldOre";
+            goldOreSmelterConfig.ToItem = "Coins";
+            goldOreSmelterConfig.Station = Smelters.Smelter;
+            ItemManager.Instance.AddItemConversion(new CustomItemConversion(goldOreSmelterConfig));
+
+            ConfigureGoldOreAutoPickup("GoldOre");
+
+        }
+
+        private void ConfigureGoldOreAutoPickup(string itemName)
+        {
+            // Get the prefab for the gold ore item
+            GameObject itemPrefab = PrefabManager.Instance.GetPrefab(itemName);
+            if (itemPrefab == null)
+            {
+                Debug.LogError($"Prefab '{itemName}' not found.");
+                return;
+            }
+
+            // Get the existing ItemDrop component from the prefab
+            ItemDrop itemDrop = itemPrefab.GetComponent<ItemDrop>();
+            if (itemDrop == null)
+            {
+                Debug.LogError($"ItemDrop component not found on prefab '{itemName}'.");
+                return;
+            }
+
+            // Set the item to auto-pickup
+            itemDrop.m_autoPickup = true;
+        }
+        #endregion
+
+        #region VegetationConfigs
         // Define the vegetation configuration
         VegetationConfig goldDepositConfig = new VegetationConfig
         {
@@ -259,46 +307,9 @@ namespace MoreOreDeposits
             ScaleMax = 296,
 
         };
+        #endregion
 
-        // Configure gold ore item config and add item to game
-        private void CreateGoldOre()
-        {
-
-            var goldOreItem = new CustomItem(goldOrePrefab, false);
-            ItemManager.Instance.AddItem(goldOreItem);
-
-            var goldOreSmelterConfig = new SmelterConversionConfig();
-            goldOreSmelterConfig.FromItem = "GoldOre";
-            goldOreSmelterConfig.ToItem = "Coins";
-            goldOreSmelterConfig.Station = Smelters.Smelter;
-            ItemManager.Instance.AddItemConversion(new CustomItemConversion(goldOreSmelterConfig));
-
-            ConfigureGoldOreAutoPickup("GoldOre");
-
-        }
-
-        private void ConfigureGoldOreAutoPickup(string itemName)
-        {
-            // Get the prefab for the gold ore item
-            GameObject itemPrefab = PrefabManager.Instance.GetPrefab(itemName);
-            if (itemPrefab == null)
-            {
-                Debug.LogError($"Prefab '{itemName}' not found.");
-                return;
-            }
-
-            // Get the existing ItemDrop component from the prefab
-            ItemDrop itemDrop = itemPrefab.GetComponent<ItemDrop>();
-            if (itemDrop == null)
-            {
-                Debug.LogError($"ItemDrop component not found on prefab '{itemName}'.");
-                return;
-            }
-
-            // Set the item to auto-pickup
-            itemDrop.m_autoPickup = true;
-        }
-
+        #region ZoneManager
         private void AddVegetation()
         {
             // Ensure all prefabs are loaded
@@ -333,7 +344,9 @@ namespace MoreOreDeposits
             ZoneManager.Instance.AddCustomVegetation(silverDepositVegetation);
             ZoneManager.Instance.AddCustomVegetation(blackmetalDepositVegetation);
         }
+        #endregion
 
+        #region Unity Scripts
         private void ConfigureDestructible(GameObject prefab, int minToolTier, float health)
         {
             var destructible = prefab.GetComponent<Destructible>() ?? prefab.AddComponent<Destructible>();
@@ -358,21 +371,6 @@ namespace MoreOreDeposits
                 new EffectList.EffectData { m_prefab = hitSoundPrefab }
             };
         }
-
-        //private void ConfigureDropOnDestroyed(GameObject prefab, string itemName, int minStack, int maxStack)
-        //{
-        //    var dropOnDestroyed = prefab.GetComponent<DropOnDestroyed>() ?? prefab.AddComponent<DropOnDestroyed>();
-        //        dropOnDestroyed.m_dropWhenDestroyed.m_drops = new List<DropTable.DropData>
-        //    {
-        //        new DropTable.DropData
-        //        {
-        //            m_item = PrefabManager.Instance.GetPrefab(itemName),
-        //            m_stackMin = minStack,
-        //            m_stackMax = maxStack,
-        //            m_weight = 1f
-        //        },
-        //    };
-        //}
 
         private void ConfigureDropOnDestroyed(GameObject prefab, OreDropConfig oreConfig)
         {
@@ -402,13 +400,17 @@ namespace MoreOreDeposits
             hoverTextComponent.m_text = hoverText;
         }
 
+
+        #endregion
+
     }
 
+    #region Harmony Patches
     // Harmony patch class
     [HarmonyPatch(typeof(Smelter), "Spawn")]
-    static class SmelterProduceMore
+    public static class SmelterProduceMore
     {
-        static void Prefix(Smelter __instance, string ore, ref int stack)
+        public static void Prefix(Smelter __instance, string ore, ref int stack)
         {
             if (!__instance) return;
             if (ore == "GoldOre") // Make sure this matches the exact name of your ore item
@@ -417,5 +419,6 @@ namespace MoreOreDeposits
             }
         }
     }
+    #endregion
 
 }
