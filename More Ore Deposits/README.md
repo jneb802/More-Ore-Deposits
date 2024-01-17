@@ -47,7 +47,7 @@ Prefab name: MineRock_silver
 - Biomes: Mountain
 - Tool tier requirement: 2 (Iron Pickaxe)
 - Spawn per zone: 0 - 2
-- Drops: 2 - 3 Iron Ore
+- Drops: 2 - 3 Iron Scrap
 
 Prefab name: MineRock_blackmetal
 - Biomes: Plains
@@ -58,7 +58,7 @@ Prefab name: MineRock_blackmetal
 
 ## Known issues
 1. Not currently compatible with SmoothBrain's Mining skill mod. I would like to make them compatible but struggled to get the code working.
-2. If you enter an invalid string (such as '/' in the configuration fields it will send an error. The error is harmless and won't break anything.
+2. If you enter an invalid string such as '/' in the configuration fields it will send an error. The error is harmless and won't break anything.
 3. The smelter recipe for gold ore is incorrect in VNEI. It shows that 1 gold ore = 1 coins, which is incorrect. It's 1 gold ore = 10x coins.
 
 ## Support & Feedback

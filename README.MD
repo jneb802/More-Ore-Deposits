@@ -23,6 +23,8 @@ The goal of this mod is to add additional small ore deposits to the world. You c
 
 `vegetation_reset MineRock_gold,MineRock_iron,MineRock_silver_small,MineRock_blackmetal biomes=BlackForest,Swamp,Mountain,Plains start`
 
+Note: The command will likely say "## skipped by having wrong biomes". This is expected and won't cause any issues.
+
 If you'd like to only add some of the ore: First adjust the command by removing the prefab name and the biome. Then run the altered command.
 
 

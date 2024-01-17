@@ -136,6 +136,7 @@
     <None Include="Package\manifest.json" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="assets\coal_bundle" />
     <Content Include="Package\icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

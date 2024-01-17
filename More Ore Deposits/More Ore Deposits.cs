@@ -21,7 +21,7 @@ namespace MoreOreDeposits
         #region Plugin Info
         public const string PluginGUID = "com.bepinex.MoreOreDeposits";
         public const string PluginName = "More Ore Deposits";
-        public const string PluginVersion = "1.2.1";
+        public const string PluginVersion = "1.2.2";
         #endregion
 
         #region Unity Lifecycle
@@ -74,7 +74,8 @@ namespace MoreOreDeposits
               { "GoldDeposit_warp", "Gold" },
               { "IronDeposit_warp", "Iron" },
               { "SilverDepositSmall_warp", "Silver" },
-              { "BlackmetalDeposit_warp", "Blackmetal" }
+              { "BlackmetalDeposit_warp", "Blackmetal" },
+              {"CoalDeposit_warp", "Coal"}
             });
         }
 
@@ -103,21 +104,24 @@ namespace MoreOreDeposits
         private OreDropConfig ironOreConfig;
         private OreDropConfig silverOreConfig;
         private OreDropConfig blackmetalOreConfig;
+        private OreDropConfig coalOreConfig;
 
         private void InitializeOreConfigs()
         {
 
             // Initialize ore configurations
             goldOreConfig = OreDropConfig.GetFromProps(this, "GoldOre", 1, 2);
-            ironOreConfig = OreDropConfig.GetFromProps(this, "IronOre", 2, 3);
+            ironOreConfig = OreDropConfig.GetFromProps(this, "IronScrap", 2, 3);
             silverOreConfig = OreDropConfig.GetFromProps(this, "SilverOre", 2, 3);
             blackmetalOreConfig = OreDropConfig.GetFromProps(this, "BlackMetalScrap", 2, 3);
+            coalOreConfig = OreDropConfig.GetFromProps(this, "Coal", 2, 3);
 
             // Optionally add handlers for settings changes
             goldOreConfig.AddSettingsChangedHandler(OnSettingsChanged);
             ironOreConfig.AddSettingsChangedHandler(OnSettingsChanged);
             silverOreConfig.AddSettingsChangedHandler(OnSettingsChanged);
             blackmetalOreConfig.AddSettingsChangedHandler(OnSettingsChanged);
+            coalOreConfig.AddSettingsChangedHandler(OnSettingsChanged);
         }
 
         private void UpdateFeatures()
@@ -127,6 +131,7 @@ namespace MoreOreDeposits
             ConfigureDropOnDestroyed(ironDepositPrefab, ironOreConfig);
             ConfigureDropOnDestroyed(silverDepositPrefab, silverOreConfig);
             ConfigureDropOnDestroyed(blackmetalDepositPrefab, blackmetalOreConfig);
+            ConfigureDropOnDestroyed(coalDepositPrefab, coalOreConfig);
         }
 
         private void OnSettingsChanged(object sender, System.EventArgs e)
@@ -172,6 +177,9 @@ namespace MoreOreDeposits
 
         private AssetBundle blackmetalAssetBundle;
         private GameObject blackmetalDepositPrefab;
+        
+        private AssetBundle coalAssetBundle;
+        private GameObject coalDepositPrefab;
 
         private AssetBundle translationBundle;
 
@@ -189,6 +197,9 @@ namespace MoreOreDeposits
 
             blackmetalAssetBundle = AssetUtils.LoadAssetBundleFromResources("blackmetal_bundle");
             blackmetalDepositPrefab = blackmetalAssetBundle?.LoadAsset<GameObject>("MineRock_blackmetal");
+            
+            blackmetalAssetBundle = AssetUtils.LoadAssetBundleFromResources("coal_bundle");
+            blackmetalDepositPrefab = blackmetalAssetBundle?.LoadAsset<GameObject>("MineRock_coal");
 
             translationBundle = AssetUtils.LoadAssetBundleFromResources("translations_bundle");
 
@@ -204,6 +215,7 @@ namespace MoreOreDeposits
             CheckAssetBundle(ironAssetBundle, "iron");
             CheckAssetBundle(silverAssetBundle, "silver");
             CheckAssetBundle(blackmetalAssetBundle, "blackmetal");
+            CheckAssetBundle(coalAssetBundle, "coal");
         }
 
         private void CheckAssetBundle(AssetBundle bundle, string bundleName)
@@ -266,6 +278,7 @@ namespace MoreOreDeposits
             GroundOffset = -0.3f,
             ScaleMin = 295,
             ScaleMax = 296,
+            MinAltitude = 0f,
 
         };
 
@@ -279,6 +292,7 @@ namespace MoreOreDeposits
             GroundOffset = -0.3f,
             ScaleMin = 295,
             ScaleMax = 296,
+            MinAltitude = 0f,
 
         };
 
@@ -292,6 +306,7 @@ namespace MoreOreDeposits
             GroundOffset = -0.3f,
             ScaleMin = 295,
             ScaleMax = 296,
+            MinAltitude = 0f,
 
         };
 
@@ -305,6 +320,21 @@ namespace MoreOreDeposits
             GroundOffset = -0.3f,
             ScaleMin = 295,
             ScaleMax = 296,
+            MinAltitude = 0f,
+
+        };
+        
+        // Define the vegetation configuration
+        VegetationConfig coalDepositConfig = new VegetationConfig
+        {
+            Biome = Heightmap.Biome.Swamp,
+            BlockCheck = true,
+            Min = 0,
+            Max = 2,
+            GroundOffset = -0.3f,
+            ScaleMin = 300,
+            ScaleMax = 300,
+            MinAltitude = 1,
 
         };
         #endregion
@@ -313,7 +343,7 @@ namespace MoreOreDeposits
         private void AddVegetation()
         {
             // Ensure all prefabs are loaded
-            if (goldDepositPrefab == null || ironDepositPrefab == null || silverDepositPrefab == null || blackmetalDepositPrefab == null)
+            if (goldDepositPrefab == null || ironDepositPrefab == null || silverDepositPrefab == null || blackmetalDepositPrefab == null || coalDepositPrefab == null)
             {
                 Jotunn.Logger.LogError("One or more deposit prefabs are not loaded.");
                 return;
@@ -323,26 +353,30 @@ namespace MoreOreDeposits
             ConfigureDestructible(ironDepositPrefab, 1, 30f);
             ConfigureDestructible(silverDepositPrefab, 2, 30f);
             ConfigureDestructible(blackmetalDepositPrefab, 2, 30f);
+            ConfigureDestructible(coalDepositPrefab, 0, 30f);
 
             ConfigureDropOnDestroyed(goldDepositPrefab, goldOreConfig);
             ConfigureDropOnDestroyed(ironDepositPrefab, ironOreConfig);
             ConfigureDropOnDestroyed(silverDepositPrefab, silverOreConfig);
             ConfigureDropOnDestroyed(blackmetalDepositPrefab, blackmetalOreConfig);
+            ConfigureDropOnDestroyed(blackmetalDepositPrefab, blackmetalOreConfig);
 
             ConfigureHoverText(goldDepositPrefab, "$GoldDeposit_warp");
             ConfigureHoverText(ironDepositPrefab, "$IronDeposit_warp");
             ConfigureHoverText(silverDepositPrefab, "$SilverDepositSmall_warp");
-            ConfigureHoverText(blackmetalDepositPrefab, "$BlackmetalDeposit_warp");
+            ConfigureHoverText(blackmetalDepositPrefab, "$CoalDeposit_warp");
 
             CustomVegetation goldDepositVegetation = new CustomVegetation(goldDepositPrefab, false, goldDepositConfig);
             CustomVegetation ironDepositVegetation = new CustomVegetation(ironDepositPrefab, false, ironDepositConfig);
             CustomVegetation silverDepositVegetation = new CustomVegetation(silverDepositPrefab, false, silverDepositConfig);
             CustomVegetation blackmetalDepositVegetation = new CustomVegetation(blackmetalDepositPrefab, false, blackmetalDepositConfig);
+            CustomVegetation coalDepositVegetation = new CustomVegetation(coalDepositPrefab, false, coalDepositConfig);
 
             ZoneManager.Instance.AddCustomVegetation(goldDepositVegetation);
             ZoneManager.Instance.AddCustomVegetation(ironDepositVegetation);
             ZoneManager.Instance.AddCustomVegetation(silverDepositVegetation);
             ZoneManager.Instance.AddCustomVegetation(blackmetalDepositVegetation);
+            ZoneManager.Instance.AddCustomVegetation(coalDepositVegetation);
         }
         #endregion
 
