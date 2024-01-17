@@ -21,7 +21,7 @@ namespace MoreOreDeposits
         #region Plugin Info
         public const string PluginGUID = "com.bepinex.MoreOreDeposits";
         public const string PluginName = "More Ore Deposits";
-        public const string PluginVersion = "1.2.2";
+        public const string PluginVersion = "1.3.1";
         #endregion
 
         #region Unity Lifecycle
@@ -69,13 +69,13 @@ namespace MoreOreDeposits
             Localization = LocalizationManager.Instance.GetLocalization();
             Localization.AddTranslation("English", new Dictionary<string, string>
             {
-              {"GoldOre_warp", "Gold ore" },
+              { "GoldOre_warp", "Gold ore" },
               { "GoldOre_desc_warp", "Unrefined gold. Use a smelter to refine into gold coins." },
               { "GoldDeposit_warp", "Gold" },
               { "IronDeposit_warp", "Iron" },
               { "SilverDepositSmall_warp", "Silver" },
               { "BlackmetalDeposit_warp", "Blackmetal" },
-              {"CoalDeposit_warp", "Coal"}
+              { "CoalDeposit_warp", "Coal rock"}
             });
         }
 
@@ -198,8 +198,8 @@ namespace MoreOreDeposits
             blackmetalAssetBundle = AssetUtils.LoadAssetBundleFromResources("blackmetal_bundle");
             blackmetalDepositPrefab = blackmetalAssetBundle?.LoadAsset<GameObject>("MineRock_blackmetal");
             
-            blackmetalAssetBundle = AssetUtils.LoadAssetBundleFromResources("coal_bundle");
-            blackmetalDepositPrefab = blackmetalAssetBundle?.LoadAsset<GameObject>("MineRock_coal");
+            coalAssetBundle = AssetUtils.LoadAssetBundleFromResources("coal_bundle");
+            coalDepositPrefab = coalAssetBundle?.LoadAsset<GameObject>("MineRock_coal");
 
             translationBundle = AssetUtils.LoadAssetBundleFromResources("translations_bundle");
 
@@ -334,7 +334,7 @@ namespace MoreOreDeposits
             GroundOffset = -0.3f,
             ScaleMin = 300,
             ScaleMax = 300,
-            MinAltitude = 1,
+            MinAltitude = 0,
 
         };
         #endregion
@@ -359,12 +359,13 @@ namespace MoreOreDeposits
             ConfigureDropOnDestroyed(ironDepositPrefab, ironOreConfig);
             ConfigureDropOnDestroyed(silverDepositPrefab, silverOreConfig);
             ConfigureDropOnDestroyed(blackmetalDepositPrefab, blackmetalOreConfig);
-            ConfigureDropOnDestroyed(blackmetalDepositPrefab, blackmetalOreConfig);
+            ConfigureDropOnDestroyed(coalDepositPrefab, coalOreConfig);
 
             ConfigureHoverText(goldDepositPrefab, "$GoldDeposit_warp");
             ConfigureHoverText(ironDepositPrefab, "$IronDeposit_warp");
             ConfigureHoverText(silverDepositPrefab, "$SilverDepositSmall_warp");
-            ConfigureHoverText(blackmetalDepositPrefab, "$CoalDeposit_warp");
+            ConfigureHoverText(blackmetalDepositPrefab, "$BlackmetalDeposit_warp");
+            ConfigureHoverText(coalDepositPrefab, "$CoalDeposit_warp");
 
             CustomVegetation goldDepositVegetation = new CustomVegetation(goldDepositPrefab, false, goldDepositConfig);
             CustomVegetation ironDepositVegetation = new CustomVegetation(ironDepositPrefab, false, ironDepositConfig);

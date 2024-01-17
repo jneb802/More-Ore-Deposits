@@ -121,7 +121,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <EmbeddedResource Include="assets\translations_bundle" />
     <EmbeddedResource Include="assets\gold_bundle" />
     <EmbeddedResource Include="assets\blackmetal_bundle" />
     <EmbeddedResource Include="assets\iron_bundle" />
@@ -137,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="assets\coal_bundle" />
+    <EmbeddedResource Include="assets\translations_bundle" />
     <Content Include="Package\icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
