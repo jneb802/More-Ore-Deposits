@@ -7,6 +7,7 @@ using UnityEngine;
 using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Security.Policy;
 using HarmonyLib;
 using BepInEx.Configuration;
 using Configuration;
@@ -21,9 +22,9 @@ namespace MoreOreDeposits
         #region Plugin Info
         public const string PluginGUID = "com.bepinex.MoreOreDeposits";
         public const string PluginName = "More Ore Deposits";
-        public const string PluginVersion = "1.3.1";
+        public const string PluginVersion = "1.3.3";
         #endregion
-
+        
         #region Unity Lifecycle
         private void Awake()
         {
@@ -302,11 +303,11 @@ namespace MoreOreDeposits
             Biome = Heightmap.Biome.Mountain,
             BlockCheck = true,
             Min = 0,
-            Max = 2,
+            Max = 1,
             GroundOffset = -0.3f,
             ScaleMin = 295,
             ScaleMax = 296,
-            MinAltitude = 0f,
+            MinAltitude = 90f,
 
         };
 
