@@ -406,6 +406,17 @@ namespace MoreOreDeposits
                 new EffectList.EffectData { m_prefab = hitEffectPrefab },
                 new EffectList.EffectData { m_prefab = hitSoundPrefab }
             };
+
+            destructible.m_damages.m_blunt = HitData.DamageModifier.Immune;
+            destructible.m_damages.m_slash = HitData.DamageModifier.Immune;
+            destructible.m_damages.m_pierce = HitData.DamageModifier.Immune;
+            destructible.m_damages.m_chop = HitData.DamageModifier.Immune;
+            destructible.m_damages.m_pickaxe = HitData.DamageModifier.Normal;
+            destructible.m_damages.m_fire = HitData.DamageModifier.Immune;
+            destructible.m_damages.m_frost = HitData.DamageModifier.Immune;
+            destructible.m_damages.m_lightning = HitData.DamageModifier.Immune;
+            destructible.m_damages.m_poison = HitData.DamageModifier.Immune;
+            destructible.m_damages.m_spirit = HitData.DamageModifier.Immune;
         }
 
         private void ConfigureDropOnDestroyed(GameObject prefab, OreDropConfig oreConfig)
