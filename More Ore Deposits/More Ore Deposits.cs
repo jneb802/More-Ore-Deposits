@@ -462,7 +462,7 @@ namespace MoreOreDeposits
             if (!__instance) return;
             if (ore == "GoldOre") // Make sure this matches the exact name of your ore item
             {
-                stack *= 10; // Multiply the stack by 10 for gold ore
+                stack *= 20; // Multiply the stack by 10 for gold ore
             }
         }
     }
