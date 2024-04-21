@@ -22,7 +22,7 @@ namespace MoreOreDeposits
         #region Plugin Info
         public const string PluginGUID = "com.bepinex.MoreOreDeposits";
         public const string PluginName = "More Ore Deposits";
-        public const string PluginVersion = "1.3.3";
+        public const string PluginVersion = "1.3.4";
         #endregion
         
         #region Unity Lifecycle
@@ -113,7 +113,7 @@ namespace MoreOreDeposits
             // Initialize ore configurations
             goldOreConfig = OreDropConfig.GetFromProps(this, "GoldOre", 1, 2);
             ironOreConfig = OreDropConfig.GetFromProps(this, "IronScrap", 2, 3);
-            silverOreConfig = OreDropConfig.GetFromProps(this, "SilverOre", 2, 3);
+            silverOreConfig = OreDropConfig.GetFromProps(this, "SilverOre", 1, 2);
             blackmetalOreConfig = OreDropConfig.GetFromProps(this, "BlackMetalScrap", 2, 3);
             coalOreConfig = OreDropConfig.GetFromProps(this, "Coal", 2, 3);
 
@@ -304,10 +304,10 @@ namespace MoreOreDeposits
             BlockCheck = true,
             Min = 0,
             Max = 1,
-            GroundOffset = -0.3f,
+            GroundOffset = -1.3f,
             ScaleMin = 295,
             ScaleMax = 296,
-            MinAltitude = 90f,
+            MaxAltitude = 100f,
 
         };
 
@@ -368,6 +368,8 @@ namespace MoreOreDeposits
             ConfigureHoverText(blackmetalDepositPrefab, "$BlackmetalDeposit_warp");
             ConfigureHoverText(coalDepositPrefab, "$CoalDeposit_warp");
 
+            ConfigureBeacon(silverDepositPrefab);
+
             CustomVegetation goldDepositVegetation = new CustomVegetation(goldDepositPrefab, false, goldDepositConfig);
             CustomVegetation ironDepositVegetation = new CustomVegetation(ironDepositPrefab, false, ironDepositConfig);
             CustomVegetation silverDepositVegetation = new CustomVegetation(silverDepositPrefab, false, silverDepositConfig);
@@ -426,6 +428,14 @@ namespace MoreOreDeposits
                 {
                     getDropDataFromEntry(oreConfig)
                 };
+        }
+
+        private void ConfigureBeacon(GameObject prefab)
+        {
+            var beacon = prefab.AddComponent<Beacon>();
+
+            beacon.m_range = 30;
+
         }
 
         private void ConfigureHoverText(GameObject prefab, string hoverText)
