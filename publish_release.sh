@@ -1,43 +1,32 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-DLL=MoreOreDeposits/bin/Release/MoreOreDeposits.dll
-PLUGINS=MoreOreDeposits/Package/plugins
-README=README.md
-#TRANSLATIONS=Translations
+set -euo pipefail
 
-VERSION=$1
-
-# Check that source files exist and are readable
-if [ ! -f "$DLL" ]; then
-    echo "Error: $DLL does not exist or is not readable."
+if [[ $# -ne 1 ]]; then
+    echo "Usage: $0 <version>" >&2
     exit 1
 fi
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VERSION="$1"
+PROJECT_DIR="$SCRIPT_DIR/More Ore Deposits"
+DLL="$PROJECT_DIR/bin/Release/More Ore Deposits.dll"
+PACKAGE_DIR="$PROJECT_DIR/Package"
+PLUGINS="$PACKAGE_DIR/plugins"
+ZIP_DESTINATION="$PROJECT_DIR/bin/Release/MoreOreDeposits.$VERSION.zip"
 
-# Check that target directory exists and is writable
-if [ ! -d "$PLUGINS" ]; then
-    echo "Error: $PLUGINS directory does not exist."
+if [[ ! -f "$DLL" ]]; then
+    echo "Error: Build the Release configuration before packaging: $DLL" >&2
     exit 1
 fi
 
-if [ ! -w "$PLUGINS" ]; then
-    echo "Error: $PLUGINS directory is not writable."
-    exit 1
-fi
+mkdir -p "$PLUGINS"
+cp -f "$DLL" "$PLUGINS/"
 
-if [ ! -f "$README" ]; then
-    echo "Error: $README does not exist or is not readable."
-    exit 1
-fi
+rm -f "$ZIP_DESTINATION"
+(
+    cd "$PACKAGE_DIR"
+    zip -r "$ZIP_DESTINATION" .
+)
 
-cp -f "$DLL" "$PLUGINS" || { echo "Error: Failed to copy $DLL"; exit 1; }
-cp -f "$README" "$PLUGINS/../README.md" || { echo "Error: Failed to copy $README"; exit 1; }
-#cp -rf "$TRANSLATIONS" "$PLUGINS/"  || { echo "Error: Failed to copy Translations"; exit 1; }
-
-ZIPDESTINATION="../bin/Release/MoreOreDeposits.$VERSION.zip"
-
-cd "$PLUGINS/.."
-if [ ! -z "$VERSION" ]; then
-    VERSION=".$VERSION"
-fi
-zip -r "$ZIPDESTINATION" .
+echo "Created $ZIP_DESTINATION"

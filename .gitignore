@@ -4,6 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # User-specific files
+.DS_Store
 *.rsuser
 *.suo
 *.user
@@ -367,9 +368,6 @@ FodyWeavers.xsd
 # not the libraries folder
 !libraries/*
 .idea/
-
-# not the valheim path file
-Environment.props
 
 # not the generated dll for thunderstore
 */Package/plugins/*

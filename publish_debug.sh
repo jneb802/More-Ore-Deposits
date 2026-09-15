@@ -1,23 +1,23 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-DLL=MoreOreDeposits/bin/Debug/MoreOreDeposits.dll
-PLUGINS=C:\Users\jneb8\AppData\Roaming\r2modmanPlus-local\Valheim\profiles\ValheimModDev\BepInEx\plugins
+set -euo pipefail
 
-# Check that source files exist and are readable
-if [ ! -f "$DLL" ]; then
-    echo "Error: $DLL does not exist or is not readable."
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VALHEIM_ROOT="${VALHEIM_INSTALL:-$HOME/Library/Application Support/Steam/steamapps/common/Valheim}"
+DLL="$SCRIPT_DIR/More Ore Deposits/bin/Debug/More Ore Deposits.dll"
+PLUGINS="${MOD_DEPLOYPATH:-$VALHEIM_ROOT/BepInEx/plugins}/MoreOreDeposits"
+
+if [[ ! -f "$DLL" ]]; then
+    echo "Error: Build the Debug configuration before deployment: $DLL" >&2
     exit 1
 fi
 
-# Check that target directory exists and is writable
-if [ ! -d "$PLUGINS" ]; then
-    echo "Error: $PLUGINS directory does not exist."
-    exit 1
+mkdir -p "$PLUGINS"
+cp -f "$DLL" "$PLUGINS/"
+
+PDB="${DLL%.dll}.pdb"
+if [[ -f "$PDB" ]]; then
+    cp -f "$PDB" "$PLUGINS/"
 fi
 
-if [ ! -w "$PLUGINS" ]; then
-    echo "Error: $PLUGINS directory is not writable."
-    exit 1
-fi
-
-cp -f "$DLL" "$PLUGINS" || { echo "Error: Failed to copy $DLL"; exit 1; }
+echo "Deployed More Ore Deposits to $PLUGINS"
