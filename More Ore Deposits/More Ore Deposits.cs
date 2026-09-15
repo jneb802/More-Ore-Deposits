@@ -4,10 +4,8 @@ using Jotunn.Managers;
 using Jotunn.Utils;
 using Jotunn.Configs;
 using UnityEngine;
-using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
-using System.Security.Policy;
 using HarmonyLib;
 using BepInEx.Configuration;
 using Configuration;
@@ -22,7 +20,8 @@ namespace MoreOreDeposits
         #region Plugin Info
         public const string PluginGUID = "com.bepinex.MoreOreDeposits";
         public const string PluginName = "More Ore Deposits";
-        public const string PluginVersion = "1.3.5";
+        public const string PluginVersion = "1.4.0";
+        public const string GoldOrePrefabName = "MoreOreDeposits_GoldOre";
         #endregion
         
         #region Unity Lifecycle
@@ -112,6 +111,7 @@ namespace MoreOreDeposits
 
             // Initialize ore configurations
             goldOreConfig = OreDropConfig.GetFromProps(this, "GoldOre", 1, 2);
+            goldOreConfig.OreName = GoldOrePrefabName;
             ironOreConfig = OreDropConfig.GetFromProps(this, "IronScrap", 2, 3);
             silverOreConfig = OreDropConfig.GetFromProps(this, "SilverOre", 1, 2);
             blackmetalOreConfig = OreDropConfig.GetFromProps(this, "BlackMetalScrap", 2, 3);
@@ -189,6 +189,10 @@ namespace MoreOreDeposits
             goldAssetBundle = AssetUtils.LoadAssetBundleFromResources("gold_bundle");
             goldDepositPrefab = goldAssetBundle?.LoadAsset<GameObject>("MineRock_gold");
             goldOrePrefab = goldAssetBundle?.LoadAsset<GameObject>("GoldOre");
+            if (goldOrePrefab != null)
+            {
+                goldOrePrefab.name = GoldOrePrefabName;
+            }
 
             ironAssetBundle = AssetUtils.LoadAssetBundleFromResources("iron_bundle");
             ironDepositPrefab = ironAssetBundle?.LoadAsset<GameObject>("MineRock_iron");
@@ -231,17 +235,30 @@ namespace MoreOreDeposits
         #region ItemManager
         private void CreateGoldOre()
         {
+            if (goldOrePrefab == null)
+            {
+                Jotunn.Logger.LogError("Failed to load the custom gold ore item.");
+                return;
+            }
 
-            var goldOreItem = new CustomItem(goldOrePrefab, false);
-            ItemManager.Instance.AddItem(goldOreItem);
+            CustomItem goldOreItem = new CustomItem(goldOrePrefab, false);
+            if (!ItemManager.Instance.AddItem(goldOreItem))
+            {
+                Jotunn.Logger.LogError($"Failed to register the custom gold ore item '{GoldOrePrefabName}'.");
+                return;
+            }
 
-            var goldOreSmelterConfig = new SmelterConversionConfig();
-            goldOreSmelterConfig.FromItem = "GoldOre";
+            SmelterConversionConfig goldOreSmelterConfig = new SmelterConversionConfig();
+            goldOreSmelterConfig.FromItem = GoldOrePrefabName;
             goldOreSmelterConfig.ToItem = "Coins";
             goldOreSmelterConfig.Station = Smelters.Smelter;
-            ItemManager.Instance.AddItemConversion(new CustomItemConversion(goldOreSmelterConfig));
+            CustomItemConversion goldOreConversion = new CustomItemConversion(goldOreSmelterConfig);
+            if (!ItemManager.Instance.AddItemConversion(goldOreConversion))
+            {
+                Jotunn.Logger.LogError("Failed to register the custom gold ore smelter conversion.");
+            }
 
-            ConfigureGoldOreAutoPickup("GoldOre");
+            ConfigureGoldOreAutoPickup(GoldOrePrefabName);
 
         }
 
@@ -470,9 +487,9 @@ namespace MoreOreDeposits
         public static void Prefix(Smelter __instance, string ore, ref int stack)
         {
             if (!__instance) return;
-            if (ore == "GoldOre") // Make sure this matches the exact name of your ore item
+            if (ore == MoreOreDeposits.GoldOrePrefabName)
             {
-                stack *= 20; // Multiply the stack by 10 for gold ore
+                stack *= 20;
             }
         }
     }
