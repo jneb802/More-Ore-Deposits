@@ -63,3 +63,15 @@ Prefab name: MineRock_blackmetal
 Please give me feedback if you have any thoughts about the mods! Whether it's balance, models / textures, or just more ideas, I'd love to hear your input. If you have any issues you can also ask. You can find my in the OdinPlus discord.
 
 Github link: https://github.com/jneb802/More-Ore-Deposits
+
+## Development
+
+The project supports macOS and Windows. Install Valheim, BepInEx, Jotunn, and the publicized Valheim assemblies before building.
+
+```bash
+dotnet build "More Ore Deposits.sln"
+```
+
+On macOS, the default Valheim path is `$HOME/Library/Application Support/Steam/steamapps/common/Valheim`. Set `VALHEIM_INSTALL` to override it.
+
+Run `./publish_debug.sh` after a Debug build to deploy the DLL to the local BepInEx plugins folder.
