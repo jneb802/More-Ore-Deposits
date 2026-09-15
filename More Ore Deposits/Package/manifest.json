@@ -1,0 +1,10 @@
+{
+  "name": "More_Ore_Deposits",
+  "description": "Adds small ore deposits (gold, coal, iron, silver, and blackmetal) to the respective biomes",
+  "version_number": "1.4.0",
+  "website_url": "https://discord.com/invite/KKHujtRGvB",
+  "dependencies": [
+    "denikson-BepInExPack_Valheim-5.4.2350",
+    "ValheimModding-Jotunn-2.30.0"
+  ]
+}
