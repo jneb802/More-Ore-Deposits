@@ -9,32 +9,4 @@ fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VERSION="$1"
-PROJECT_DIR="$SCRIPT_DIR/More Ore Deposits"
-DLL="$PROJECT_DIR/bin/Release/More Ore Deposits.dll"
-PACKAGE_DIR="$PROJECT_DIR/Package"
-PLUGINS="$PACKAGE_DIR/plugins"
-ZIP_DESTINATION="$PROJECT_DIR/bin/Release/MoreOreDeposits.$VERSION.zip"
-MANIFEST="$PACKAGE_DIR/manifest.json"
-
-if [[ ! -f "$DLL" ]]; then
-    echo "Error: Build the Release configuration before packaging: $DLL" >&2
-    exit 1
-fi
-
-MANIFEST_VERSION="$(sed -n 's/.*"version_number": "\([^"]*\)".*/\1/p' "$MANIFEST")"
-if [[ "$VERSION" != "$MANIFEST_VERSION" ]]; then
-    echo "Error: Requested version $VERSION does not match manifest version $MANIFEST_VERSION" >&2
-    exit 1
-fi
-
-mkdir -p "$PLUGINS"
-cp -f "$DLL" "$PLUGINS/"
-cp -f "$SCRIPT_DIR/CHANGELOG.md" "$PACKAGE_DIR/CHANGELOG.md"
-
-rm -f "$ZIP_DESTINATION"
-(
-    cd "$PACKAGE_DIR"
-    zip -r "$ZIP_DESTINATION" .
-)
-
-echo "Created $ZIP_DESTINATION"
+exec python3 "$SCRIPT_DIR/scripts/package_release.py" "$VERSION"
