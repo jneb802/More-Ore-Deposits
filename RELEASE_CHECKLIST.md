@@ -8,7 +8,7 @@ Status on 2026-10-01: package prepared. In-game release validation is incomplete
 - The published package contains the DLL, README, changelog, manifest, and icon.
 - The candidate keeps the package name `More_Ore_Deposits` and all five deposit prefab names.
 - The candidate moves the DLL into `plugins/`. All six asset bundles remain embedded in the DLL.
-- The candidate requires BepInExPack 5.4.2350 and Jotunn 2.30.0. Both versions exist on Thunderstore. These are the versions used for the earlier startup proof; newer dependency releases do not change this minimum requirement.
+- The candidate requires [BepInExPack 5.4.2351](https://thunderstore.io/c/valheim/p/denikson/BepInExPack_Valheim/) and [Jotunn 2.30.2](https://thunderstore.io/c/valheim/p/ValheimModding/Jotunn/). These are the latest published versions checked for this package update. The earlier startup proof used BepInExPack 5.4.2350 and Jotunn 2.30.0.
 
 ## Completed checks
 
