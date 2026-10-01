@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>MoreOreDeposits</RootNamespace>
     <AssemblyName>More Ore Deposits</AssemblyName>
-    <Version>1.4.0</Version>
+    <Version>1.4.1</Version>
     <LangVersion>10</LangVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>

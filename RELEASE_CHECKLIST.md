@@ -1,20 +1,21 @@
-# More Ore Deposits 1.4.0 release checks
+# More Ore Deposits 1.4.1 release checks
 
-Status on 2026-10-01: package prepared. In-game release validation is incomplete.
+Version 1.4.1 restores the original ore artwork from the published 1.3.5 package. Version 1.4.0 shipped a placeholder icon. Gameplay code changes only its version declaration.
 
 ## Published baseline
 
-- Thunderstore currently lists [1.3.5](https://thunderstore.io/c/valheim/p/warpalicious/More_Ore_Deposits/versions/).
+- Thunderstore currently lists [1.4.0](https://thunderstore.io/api/experimental/package/warpalicious/More_Ore_Deposits/).
 - The published package contains the DLL, README, changelog, manifest, and icon.
 - The candidate keeps the package name `More_Ore_Deposits` and all five deposit prefab names.
 - The candidate moves the DLL into `plugins/`. All six asset bundles remain embedded in the DLL.
-- The candidate requires BepInExPack 5.4.2350 and Jotunn 2.30.0. Both versions exist on Thunderstore. These are the versions used for the earlier startup proof; newer dependency releases do not change this minimum requirement.
+- The candidate requires [BepInExPack 5.4.2351](https://thunderstore.io/c/valheim/p/denikson/BepInExPack_Valheim/) and [Jotunn 2.30.2](https://thunderstore.io/c/valheim/p/ValheimModding/Jotunn/). These are the latest published versions checked for this package update. The earlier startup proof used BepInExPack 5.4.2350 and Jotunn 2.30.0.
 
 ## Completed checks
 
 - Release build passes with warnings treated as errors.
-- Plugin, project, assembly, and manifest versions are 1.4.0.
+- Plugin, project, assembly, and manifest versions are 1.4.1.
 - The PNG icon is 256 by 256 pixels.
+- The icon was visually inspected and is identical to `icon.png` in the published 1.3.5 package. Its SHA-256 is `10c63af3724371c28525600a577855a6ba90b1b58e25334393c1214547fa799d`.
 - The package command creates a fresh Release build before packaging.
 - The ZIP contains exactly the manifest, README, changelog, icon, and candidate DLL.
 - The package command excludes `.DS_Store`, unrelated files, and stale DLLs in the Package directory.
@@ -25,10 +26,10 @@ Status on 2026-10-01: package prepared. In-game release validation is incomplete
 Build and package locally with:
 
 ```sh
-./publish_release.sh 1.4.0
+./publish_release.sh 1.4.1
 ```
 
-This command needs Python 3, .NET, and the game references configured in `Environment.props`. It creates `More Ore Deposits/bin/Release/MoreOreDeposits.1.4.0.zip`. It does not upload the package.
+This command needs Python 3, .NET, and the game references configured in `Environment.props`. It creates `More Ore Deposits/bin/Release/MoreOreDeposits.1.4.1.zip`. It does not upload the package.
 
 ## Earlier in-game evidence
 
@@ -42,7 +43,9 @@ This command needs Python 3, .NET, and the game references configured in `Enviro
 
 These tests do not prove mining, smelting, natural world generation, save migration, or multiplayer behavior.
 
-## Required in-game checks before publishing
+## In-game checks recorded during 1.4.0 preparation
+
+These are the broader gameplay checks recorded during 1.4.0 preparation. No new gameplay behavior is introduced in the 1.4.1 icon correction. The user reported a successful external test of the 1.4.0 DLL; the exact test scope was not supplied.
 
 Use the current deployed Praetoris Season 8 release on Valdev and the participating Valnet clients. Record profiles, actual loaded versions, candidate DLL hashes, and logs. Back up candidate replacements and restore the maintained profiles after testing.
 
@@ -66,4 +69,4 @@ Valdev and Valnet client 01 were leased for another validation task during this 
 
 ## Publish gate
 
-The package is not yet approved for upload. Complete the in-game checks and review the result before requesting explicit approval to publish on Thunderstore.
+The 1.4.1 package is prepared for manual upload. No upload was performed. Automated publishing requires explicit approval.
