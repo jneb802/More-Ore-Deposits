@@ -20,7 +20,7 @@ namespace MoreOreDeposits
         #region Plugin Info
         public const string PluginGUID = "com.bepinex.MoreOreDeposits";
         public const string PluginName = "More Ore Deposits";
-        public const string PluginVersion = "1.4.0";
+        public const string PluginVersion = "1.4.1";
         public const string GoldOrePrefabName = "MoreOreDeposits_GoldOre";
         #endregion
         
